@@ -1,88 +1,33 @@
-# Flutter Clean App
+# flutter_clean_app
 
-A Flutter application demonstrating clean architecture with Dio, BLoC pattern, and SharedPreferences.
-
----
+Flutter app for a Bakberdi's assignment. Shows a todo list fetched from an API, lets you add and delete items, and has a dark/light theme switch that saves between sessions.
 
 ## Architecture
 
-The project follows a strict 3-layer separation of concerns:
+Split into 3 layers:
 
 ```
 lib/
 ├── main.dart
 ├── models/
-│   └── item.dart               # Data model
-├── services/                   # Data layer
-│   ├── api_service.dart        # Dio HTTP client
-│   └── shared_preferences_service.dart  # Local storage
-├── blocs/                      # Business logic layer
+│   └── item.dart
+├── services/        ← handles API and local storage
+│   ├── api_service.dart
+│   └── shared_preferences_service.dart
+├── blocs/           ← business logic only, no UI code
 │   ├── items/
-│   │   ├── items_bloc.dart
-│   │   ├── items_event.dart
-│   │   └── items_state.dart
 │   └── theme/
-│       ├── theme_bloc.dart
-│       ├── theme_event.dart
-│       └── theme_state.dart
-└── screens/                    # UI layer
+└── screens/         ← UI only, no logic
     ├── home_screen.dart
     └── settings_screen.dart
 ```
 
-### Layer rules
-
-| Layer        | Responsibility                                   | Forbidden                            |
-|-------------|--------------------------------------------------|--------------------------------------|
-| **screens** | Display UI, call BLoC events, react to states    | Business logic, direct API/DB calls  |
-| **blocs**   | Handle events, manage states, call services      | Flutter UI imports (Material/Widgets)|
-| **services**| HTTP requests, local storage read/write          | UI, BLoC dependencies                |
-
----
-
-## Packages used
-
-| Package              | Purpose                      |
-|---------------------|------------------------------|
-| `dio`               | HTTP client for API calls    |
-| `shared_preferences`| Persist theme setting locally|
-| `flutter_bloc`      | BLoC state management        |
-| `equatable`         | Value equality for states    |
-
----
-
-## API
-
-The app uses [JSONPlaceholder](https://jsonplaceholder.typicode.com) as a demo REST API.
-
-| Method | Endpoint           | Description        |
-|--------|--------------------|--------------------|
-| GET    | `/todos?_limit=20` | Fetch item list    |
-| POST   | `/todos`           | Create a new item  |
-| DELETE | `/todos/:id`       | Delete an item     |
-
-> **Note:** JSONPlaceholder is a read-only mock API — POST and DELETE calls return success responses but do not actually persist changes. To use a real persistent backend, replace `_baseUrl` in `lib/services/api_service.dart` with your own [MockAPI.io](https://mockapi.io) endpoint.
-
-### Switching to MockAPI.io
-
-1. Go to [https://mockapi.io](https://mockapi.io) and create a free account.
-2. Create a new project and add a resource (e.g. `items`) with fields: `id` (auto), `title` (String), `createdAt` (DateTime).
-3. Copy the base URL (e.g. `https://64abc123.mockapi.io/api/v1`).
-4. In `lib/services/api_service.dart`, replace:
-   ```dart
-   static const String _baseUrl = 'https://jsonplaceholder.typicode.com';
-   ```
-   with your MockAPI base URL and update the endpoint paths to `/items`.
-
----
+The rule I followed:
+- **screens** just display what the bloc says, nothing else
+- **blocs** call services and update state, no Flutter/Material imports
+- **services** do all the actual network/storage work
 
 ## How to run
-
-### Prerequisites
-
-- Flutter SDK ≥ 3.0.0
-
-### Steps
 
 ```bash
 git clone <your-repo-url>
@@ -91,12 +36,23 @@ flutter pub get
 flutter run
 ```
 
----
+Tested on Android Emulator.
 
-## Features
+## API
 
-- **Home screen** — list of items from API, loading/error states, retry button, add item dialog
-- **Settings screen** — light/dark theme toggle persisted via SharedPreferences
+Using [JSONPlaceholder](https://jsonplaceholder.typicode.com) as a free fake REST API.
+
+- `GET /todos?_limit=20` – load list
+- `POST /todos` – add item
+- `DELETE /todos/:id` – delete item
+
+
+## Packages
+
+- [dio](https://pub.dev/packages/dio) – HTTP requests
+- [flutter_bloc](https://pub.dev/packages/flutter_bloc) – state management
+- [shared_preferences](https://pub.dev/packages/shared_preferences) – saving the theme choice
+- [equatable](https://pub.dev/packages/equatable) – makes comparing bloc states easier
 
 This project is a starting point for a Flutter application.
 

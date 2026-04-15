@@ -21,6 +21,7 @@ class ItemsBloc extends Bloc<ItemsEvent, ItemsState> {
       final items = await _apiService.getItems();
       emit(ItemsLoaded(items));
     } catch (e) {
+      // TODO: maybe show snackbar instead of replacing the whole state
       emit(ItemsError(e.toString()));
     }
   }
@@ -48,9 +49,10 @@ class ItemsBloc extends Bloc<ItemsEvent, ItemsState> {
     try {
       await _apiService.deleteItem(event.id);
       if (currentState is ItemsLoaded) {
-        final updatedItems =
+        // filter out the deleted item locally
+        final updatedList =
             currentState.items.where((item) => item.id != event.id).toList();
-        emit(ItemsLoaded(updatedItems));
+        emit(ItemsLoaded(updatedList));
       }
     } catch (e) {
       emit(ItemsError(e.toString()));

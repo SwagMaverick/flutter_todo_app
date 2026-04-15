@@ -1,5 +1,5 @@
 name: flutter_clean_app
-description: "Flutter app with clean architecture, Dio, BLoC, and SharedPreferences."
+description: "Flutter todo app – clean architecture practice with Dio and BLoC."
 publish_to: 'none'
 
 # The following defines the version and build number for your application.

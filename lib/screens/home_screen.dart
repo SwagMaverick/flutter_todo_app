@@ -61,6 +61,7 @@ class HomeScreen extends StatelessWidget {
                 child: Text('No items yet. Tap + to add one.'),
               );
             }
+            // TODO: add pull-to-refresh at some point
             return ListView.builder(
               itemCount: state.items.length,
               itemBuilder: (context, index) {
@@ -90,14 +91,14 @@ class HomeScreen extends StatelessWidget {
   }
 
   void _showAddItemDialog(BuildContext context) {
-    final controller = TextEditingController();
+    final titleController = TextEditingController();
     showDialog<void>(
       context: context,
       builder: (dialogContext) {
         return AlertDialog(
-          title: const Text('Add Item'),
+          title: const Text('New Item'),
           content: TextField(
-            controller: controller,
+            controller: titleController,
             autofocus: true,
             decoration: const InputDecoration(
               hintText: 'Enter title',
@@ -111,11 +112,10 @@ class HomeScreen extends StatelessWidget {
             ),
             FilledButton(
               onPressed: () {
-                final title = controller.text.trim();
-                if (title.isNotEmpty) {
-                  context.read<ItemsBloc>().add(AddItem(title));
-                  Navigator.pop(dialogContext);
-                }
+                final title = titleController.text.trim();
+                if (title.isEmpty) return;
+                context.read<ItemsBloc>().add(AddItem(title));
+                Navigator.pop(dialogContext);
               },
               child: const Text('Add'),
             ),
