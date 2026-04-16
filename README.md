@@ -40,11 +40,11 @@ Tested on Android Emulator.
 
 ## API
 
-Using [JSONPlaceholder](https://jsonplaceholder.typicode.com) as a free fake REST API.
+Using [MockAPI](https://mockapi.io) for persistent fake REST API.
 
-- `GET /todos?_limit=20` – load list
-- `POST /todos` – add item
-- `DELETE /todos/:id` – delete item
+- `GET /items` – load list
+- `POST /items` – add item
+- `DELETE /items/:id` – delete item
 
 
 ## Packages
